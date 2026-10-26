@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="refresh" content="30">
+  <title>SOC Dashboard</title>
+  <style>
+    body { font-family: system-ui, sans-serif; background: #111; color: #eee; margin: 2rem; }
+    h1 { margin-bottom: 0.2rem; }
+    .muted { color: #888; font-size: 0.9rem; }
+    table { border-collapse: collapse; width: 100%; margin: 1rem 0 2rem; }
+    th, td { text-align: left; padding: 0.5rem; border-bottom: 1px solid #333; }
+    .ok { color: #4caf50; }
+    .bad { color: #f44336; }
+    .error { background: #3a1111; padding: 0.8rem; border-radius: 6px; }
+  </style>
+</head>
+<body>
+  <h1>SOC Dashboard</h1>
+  <p class="muted">Last updated: {{ updated }} &middot; auto-refresh every 30s</p>
+
+  <h2>Containers</h2>
+  {% if error %}
+    <p class="error">{{ error }}</p>
+  {% else %}
+    <table>
+      <tr><th>Name</th><th>State</th><th>Status</th><th>Image</th></tr>
+      {% for c in containers %}
+      <tr>
+        <td>{{ c.name }}</td>
+        <td class="{{ 'ok' if c.state == 'running' else 'bad' }}">{{ c.state }}</td>
+        <td>{{ c.status }}</td>
+        <td class="muted">{{ c.image }}</td>
+      </tr>
+      {% endfor %}
+    </table>
+  {% endif %}
+
+  <h2>Service checks</h2>
+  {% if not services %}
+    <p class="muted">No checks configured (CHECK_URLS is empty).</p>
+  {% else %}
+    <table>
+      <tr><th>URL</th><th>Result</th><th>Response time</th></tr>
+      {% for s in services %}
+      <tr>
+        <td>{{ s.url }}</td>
+        <td class="{{ 'ok' if s.ok else 'bad' }}">{{ s.code or s.error }}</td>
+        <td>{{ s.ms ~ ' ms' if s.ms is not none else '-' }}</td>
+      </tr>
+      {% endfor %}
+    </table>
+  {% endif %}
+</body>
+</html>
