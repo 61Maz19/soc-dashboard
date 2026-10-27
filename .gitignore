@@ -8,3 +8,6 @@ __pycache__/
 # Editor and OS files
 .vscode/
 .DS_Store
+
+# Server-specific overrides (local to each host)
+compose.override.yml
