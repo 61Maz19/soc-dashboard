@@ -56,7 +56,7 @@
 
     <h2>Authentication events</h2>
   {% if not auth_configured %}
-    <p class="muted">Auth log not configured (file not found).</p>
+    <p class="muted">Auth log unavailable (missing or not readable, see container logs).</p>
   {% elif not auth_events %}
     <p class="muted">No authentication events in the recent log lines.</p>
   {% else %}
