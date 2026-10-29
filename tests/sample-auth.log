@@ -9,3 +9,4 @@
 2026-10-29T09:16:00.000000+03:00 testhost sudo: testuser : 3 incorrect password attempts ; TTY=/dev/pts/0 ; PWD=/home/testuser ; USER=root ; COMMAND=/usr/bin/ls
 2026-10-29T09:20:00.000000+03:00 testhost CRON[2001]: pam_unix(cron:session): session opened for user root
 this line is broken and has no valid format
+2026-10-29T09:16:30.000000+03:00 testhost sudo: pam_unix(sudo:auth): authentication failure; logname=testuser uid=1000 euid=0 tty=/dev/pts/2 ruser=testuser rhost=  user=testuser

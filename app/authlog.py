@@ -23,6 +23,7 @@ INVALID_USER = re.compile(r"^Invalid user (\S*) from (\S+)")
 NOT_ALLOWED = re.compile(r"^User (\S+) from (\S+) not allowed")
 SUDO_CMD = re.compile(r"^(\S+) : .*USER=(\S+) ; COMMAND=(\S+)")
 SUDO_FAIL = re.compile(r"incorrect password attempt")
+SUDO_AUTH_FAIL = re.compile(r"^pam_unix\(sudo:auth\): authentication failure;.*\buser=(\S+)")
 
 
 def clip(value, limit=64):
@@ -69,11 +70,12 @@ def read_events():
                                "source": clip(source), "detail": "", "alert": True})
 
         elif program == "sudo":
-            if SUDO_FAIL.search(message):
-                user = message.split(":", 1)[0].strip()
-                events.append({"time": when, "kind": "sudo failed", "user": clip(user),
+            if m := SUDO_AUTH_FAIL.match(message):
+                events.append({"time": when, "kind": "sudo failed", "user": clip(m.group(1)),
                                "source": "local", "detail": "wrong password",
                                "alert": True})
+            elif SUDO_FAIL.search(message):
+                continue  # classic sudo summary line; the PAM line above already counts it
             elif m := SUDO_CMD.match(message):
                 user, run_as, command = m.groups()
                 events.append({"time": when, "kind": "sudo", "user": clip(user),
