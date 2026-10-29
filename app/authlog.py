@@ -1,8 +1,10 @@
 """Read SSH and sudo events from the auth log (read-only)."""
 import os
 import re
+import logging
 from collections import Counter, deque
 
+log = logging.getLogger(__name__)
 AUTH_LOG = os.environ.get("AUTH_LOG", "/var/log/auth.log")
 MAX_LINES = 2000
 
@@ -29,12 +31,13 @@ def clip(value, limit=64):
 
 
 def read_events():
-    """Return (events, failures_by_ip), or None if the log is not available."""
-    if not os.path.isfile(AUTH_LOG):
+    """Return (events, failures_by_ip), or None if the log cannot be read."""
+    try:
+        with open(AUTH_LOG, encoding="utf-8", errors="replace") as f:
+            lines = deque(f, maxlen=MAX_LINES)
+    except OSError as err:
+        log.warning("Cannot read auth log %s: %s", AUTH_LOG, err)
         return None
-
-    with open(AUTH_LOG, encoding="utf-8", errors="replace") as f:
-        lines = deque(f, maxlen=MAX_LINES)
 
     events = []
     failures = Counter()
