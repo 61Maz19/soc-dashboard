@@ -14,6 +14,7 @@
     .ok { color: #4caf50; }
     .bad { color: #f44336; }
     .error { background: #3a1111; padding: 0.8rem; border-radius: 6px; }
+        .alert td { color: #f44336; }
   </style>
 </head>
 <body>
@@ -52,5 +53,40 @@
       {% endfor %}
     </table>
   {% endif %}
+
+    <h2>Authentication events</h2>
+  {% if not auth_configured %}
+    <p class="muted">Auth log not configured (file not found).</p>
+  {% elif not auth_events %}
+    <p class="muted">No authentication events in the recent log lines.</p>
+  {% else %}
+    <table>
+      <tr><th>Time</th><th>Event</th><th>User</th><th>Source</th><th>Detail</th></tr>
+      {% for e in auth_events %}
+      <tr class="{{ 'alert' if e.alert }}">
+        <td>{{ e.time }}</td>
+        <td>{{ e.kind }}</td>
+        <td>{{ e.user }}</td>
+        <td>{{ e.source }}</td>
+        <td>{{ e.detail }}</td>
+      </tr>
+      {% endfor %}
+    </table>
+  {% endif %}
+
+  {% if auth_failures %}
+    <h2>Top failed sources</h2>
+    <table>
+      <tr><th>Source</th><th>Failed attempts</th></tr>
+      {% for source, count in auth_failures %}
+      <tr>
+        <td>{{ source }}</td>
+        <td class="bad">{{ count }}</td>
+      </tr>
+      {% endfor %}
+    </table>
+  {% endif %}
+
+  
 </body>
 </html>

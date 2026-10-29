@@ -4,6 +4,7 @@ from datetime import datetime
 
 import requests
 from flask import Flask, render_template
+from app.authlog import read_events
 
 app = Flask(__name__)
 
@@ -57,16 +58,31 @@ def check_services():
 @app.route("/")
 def index():
     containers, error = get_containers()
+    auth = read_events()
     return render_template(
         "index.html",
         containers=containers,
         error=error,
         services=check_services(),
+        auth_configured=auth is not None,
+        auth_events=auth[0] if auth else [],
+        auth_failures=auth[1] if auth else [],
         updated=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
     )
-
 
 @app.route("/health")
 def health():
     """Liveness check used by Docker: is the app itself running?"""
     return {"status": "ok"}
+
+
+
+@app.after_request
+def security_headers(response):
+    """Tell the browser to refuse scripts, framing and type guessing."""
+    response.headers["Content-Security-Policy"] = (
+        "default-src 'none'; style-src 'unsafe-inline'; frame-ancestors 'none'"
+    )
+    response.headers["X-Content-Type-Options"] = "nosniff"
+    response.headers["Referrer-Policy"] = "no-referrer"
+    return response

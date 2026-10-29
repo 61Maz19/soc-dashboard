@@ -1,0 +1,11 @@
+2026-10-29T09:00:01.000000+03:00 testhost sshd-session[1001]: Accepted publickey for testuser from 192.0.2.10 port 50788 ssh2: ED25519 SHA256:TestKnownKeyForFixturesOnly00000000000000
+2026-10-29T09:05:00.000000+03:00 testhost sshd-session[1002]: Accepted publickey for testuser from 198.51.100.20 port 50111 ssh2: ED25519 SHA256:FAKEunknownKEYforTESTINGonly0000000000000000
+2026-10-29T09:10:00.000000+03:00 testhost sshd-session[1003]: Invalid user fakeuser from 192.0.2.10 port 37400
+2026-10-29T09:10:00.100000+03:00 testhost sshd-session[1003]: Connection closed by invalid user fakeuser 192.0.2.10 port 37400 [preauth]
+2026-10-29T09:11:00.000000+03:00 testhost sshd-session[1004]: User root from 192.0.2.10 not allowed because not listed in AllowUsers
+2026-10-29T09:12:00.000000+03:00 testhost sshd-session[1005]: Invalid user <script>alert(1)</script> from 203.0.113.50 port 40000
+2026-10-29T09:12:30.000000+03:00 testhost sshd-session[1006]: Invalid user AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA from 203.0.113.50 port 40001
+2026-10-29T09:15:00.000000+03:00 testhost sudo: testuser : TTY=/dev/pts/0 ; PWD=/home/testuser ; USER=root ; COMMAND=/usr/bin/grep Accepted /var/log/auth.log
+2026-10-29T09:16:00.000000+03:00 testhost sudo: testuser : 3 incorrect password attempts ; TTY=/dev/pts/0 ; PWD=/home/testuser ; USER=root ; COMMAND=/usr/bin/ls
+2026-10-29T09:20:00.000000+03:00 testhost CRON[2001]: pam_unix(cron:session): session opened for user root
+this line is broken and has no valid format
