@@ -4,7 +4,8 @@ from datetime import datetime
 
 import requests
 from flask import Flask, render_template
-from app.authlog import read_events
+from app.authlog import KNOWN_KEYS, read_events
+
 
 app = Flask(__name__)
 
@@ -67,6 +68,7 @@ def index():
         auth_configured=auth is not None,
         auth_events=auth[0] if auth else [],
         auth_failures=auth[1] if auth else [],
+        keys_configured=bool(KNOWN_KEYS),
         updated=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
     )
 

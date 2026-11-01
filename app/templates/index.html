@@ -14,7 +14,8 @@
     .ok { color: #4caf50; }
     .bad { color: #f44336; }
     .error { background: #3a1111; padding: 0.8rem; border-radius: 6px; }
-        .alert td { color: #f44336; }
+    .alert td { color: #f44336; }
+    .warn { background: #3a2f11; color: #ffcc66; padding: 0.8rem; border-radius: 6px; }
   </style>
 </head>
 <body>
@@ -28,7 +29,7 @@
     <table>
       <tr><th>Name</th><th>State</th><th>Status</th><th>Image</th></tr>
       {% for c in containers %}
-      <tr>
+      <tr class="{{ 'alert' if c.state != 'running' or 'unhealthy' in c.status }}">
         <td>{{ c.name }}</td>
         <td class="{{ 'ok' if c.state == 'running' else 'bad' }}">{{ c.state }}</td>
         <td>{{ c.status }}</td>
@@ -55,6 +56,9 @@
   {% endif %}
 
     <h2>Authentication events</h2>
+    {% if auth_configured and not keys_configured %}
+    <p class="warn">No known keys configured: every SSH login will be flagged as UNKNOWN KEY.</p>
+  {% endif %}
   {% if not auth_configured %}
     <p class="muted">Auth log unavailable (missing or not readable, see container logs).</p>
   {% elif not auth_events %}
