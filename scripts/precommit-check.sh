@@ -24,4 +24,5 @@ done
 if [ "$status" -ne 0 ]; then
   echo "Commit stopped. Fix the lines above, then git add and commit again."
 fi
+[ "$status" -eq 0 ] && echo "pre-commit: checks passed"
 exit "$status"
