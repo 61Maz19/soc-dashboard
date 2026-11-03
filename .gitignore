@@ -11,3 +11,5 @@ __pycache__/
 
 # Server-specific overrides (local to each host)
 compose.override.yml
+
+notifier.env
