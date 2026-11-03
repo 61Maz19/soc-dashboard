@@ -55,6 +55,19 @@
     </table>
   {% endif %}
 
+    <h2>Backups</h2>
+  {% if backup is none %}
+    <p class="muted">Backup status not configured (see container logs).</p>
+  {% elif backup.error %}
+    <p class="error">{{ backup.error }}</p>
+  {% else %}
+    <p class="{{ 'ok' if backup.ok else 'bad' }}">
+      Last successful backup: {{ backup.time }} ({{ backup.age_hours }} h ago)
+      &middot; {{ backup.file }} &middot; {{ backup.size }}
+      {% if not backup.ok %}&middot; OLDER THAN ALLOWED{% endif %}
+    </p>
+  {% endif %}
+
     <h2>Authentication events</h2>
     {% if auth_configured and not keys_configured %}
     <p class="warn">No known keys configured: every SSH login will be flagged as UNKNOWN KEY.</p>
