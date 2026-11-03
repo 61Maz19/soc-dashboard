@@ -20,6 +20,21 @@ services:
       - socket
       - default
 
+  notifier:
+    build: ./notifier
+    container_name: soc-notifier
+    restart: unless-stopped
+    env_file: notifier.env
+    read_only: true
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    mem_limit: 64m
+    networks:
+      - alerts
+      - egress
+
   socket-proxy:
     image: lscr.io/linuxserver/socket-proxy:latest
     container_name: soc-socket-proxy
@@ -41,3 +56,9 @@ services:
 networks:
   socket:
     internal: true
+  alerts:
+    internal: true
+  egress:
+    ipam:
+      config:
+        - subnet: 172.31.0.0/24
