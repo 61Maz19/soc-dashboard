@@ -35,6 +35,26 @@ services:
       - alerts
       - egress
 
+  alerter:
+    build:
+      context: .
+      dockerfile: alerter/Dockerfile
+    container_name: soc-alerter
+    restart: unless-stopped
+    env_file: .env
+    read_only: true
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    mem_limit: 64m
+    volumes:
+      - alerter-state:/state
+    networks:
+      - alerts
+    depends_on:
+      - notifier
+
   socket-proxy:
     image: lscr.io/linuxserver/socket-proxy:latest
     container_name: soc-socket-proxy
@@ -62,3 +82,6 @@ networks:
     ipam:
       config:
         - subnet: 172.31.0.0/24
+
+volumes:
+  alerter-state:
